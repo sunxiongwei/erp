@@ -1,0 +1,94 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:cache="http://www.springframework.org/schema/cache" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util-4.0.xsd 
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+     http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd">
+
+    <context:annotation-config />
+    <context:component-scan base-package="com.ris"
+        use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <bean id="appConfigurer"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:bigpipe.properties</value>
+            </list>
+        </property>
+        <property name="order" value="20"/> 
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+    
+    <bean id="commonAppConfigurer"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:properties/bigpipe.properties</value>
+            </list>
+        </property>
+        <property name="order" value="21"/> 
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+    
+    <!-- <bean id="messagerConfigurer"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:conf/messager.properties</value>
+            </list>
+        </property>
+        <property name="order" value="100"/> 
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean> -->
+
+ <bean id="redisson" class="com.ris.common.redis.RedissonService"
+          p:redisIp="${redis.host}"
+          p:redisPort="${redis.port}"
+          p:redisPassword="${redis.password}"/>
+          
+    <bean id="resendJedisPoolConfig" 
+        class="redis.clients.jedis.JedisPoolConfig"
+        p:maxTotal="100" 
+        p:minIdle="2" 
+        p:maxWaitMillis="200"
+        p:testOnBorrow="true"
+        p:testWhileIdle="false"
+        p:numTestsPerEvictionRun="5"
+        p:minEvictableIdleTimeMillis="300000"
+        p:timeBetweenEvictionRunsMillis="60000"
+     />
+
+    <bean id="resendJedisConnFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:usePool="true"
+          p:hostName="${redis.host}"
+          p:port="${redis.port}"
+          p:password="${redis.password}"
+          p:poolConfig-ref="resendJedisPoolConfig"
+          p:timeout="1000"
+            />
+
+    <!-- key和value都使用String类型 -->
+    <bean id="resendRetryableRedisTemplate"
+          class="com.ris.common.redis.RetryableStringRedisTemplate"
+          p:connectionFactory-ref="resendJedisConnFactory"
+          p:retryTimes="3"
+          p:retryInterval="5"
+            />
+</beans>
