@@ -8,7 +8,7 @@ import java.util.List;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import com.ris.framework.persistence.exception.PersistenceException;
+import com.sun.framework.persistence.exception.PersistenceException;
 
 @MappedSuperclass
 public class PrePersistEntity<PK extends Serializable> extends AbstractEntity<PK> {
@@ -28,7 +28,7 @@ public class PrePersistEntity<PK extends Serializable> extends AbstractEntity<PK
     @PrePersist
     @PreUpdate
     public void prePersist() {
-        // 获取值为空的属性
+        // 鑾峰彇鍊间负绌虹殑灞炴��
         Class<?> clazz = this.getClass();
         // Field[] fds = clazz.getDeclaredFields();
         List<Field> allField = new ArrayList<Field>();
@@ -43,12 +43,12 @@ public class PrePersistEntity<PK extends Serializable> extends AbstractEntity<PK
             clazz = clazz.getSuperclass();
         }
 
-        // 版本自动加1
+        // 鐗堟湰鑷姩鍔�1
         // this.version = this.version + 1;
         Object v = null;
         try {
             for (Field f : allField) {
-                // 根据注解检查更新时间等属性
+                // 鏍规嵁娉ㄨВ妫�鏌ユ洿鏂版椂闂寸瓑灞炴��
                 f.setAccessible(true);
                 v = f.get(this);
                 if (v == null) {

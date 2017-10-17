@@ -1,4 +1,4 @@
-package com.ris.framework.persistence;
+package com.sun.framework.persistence;
 
 import java.util.List;
 import java.util.Map;
@@ -13,10 +13,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.ris.framework.persistence.GenericDao;
-import com.ris.framework.persistence.QLBuilder;
-import com.ris.framework.persistence.entity.AbstractEntity;
-import com.ris.framework.toolbox.Pagination;
+import com.sun.framework.persistence.GenericDao;
+import com.sun.framework.persistence.QLBuilder;
+import com.sun.framework.persistence.entity.AbstractEntity;
+import com.sun.framework.toolbox.Pagination;
 
 /**
  * 抽象数据访问实现对象

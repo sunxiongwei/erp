@@ -1,4 +1,4 @@
-package com.ris.framework.springmvc.support;
+package com.sun.framework.springmvc.support;
 
 import java.beans.PropertyEditorSupport;
 import java.text.DateFormat;
