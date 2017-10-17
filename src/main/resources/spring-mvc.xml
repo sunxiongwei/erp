@@ -24,4 +24,44 @@
         <context:include-filter type="annotation"
             expression="org.springframework.stereotype.Service" />
     </context:component-scan>
+        <!-- 在SpringMVC中加入注解（Annotation）功能 -->
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"></bean>
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/plain;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+
+            <!-- 要放在jackson之前 -->
+            <bean class="org.springframework.http.converter.FormHttpMessageConverter">
+                <!-- -->
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json; charset=UTF-8</value>
+                        <value>application/x-www-form-urlencoded; charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+
+            <!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+            <bean
+                class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="prettyPrint" value="true" />
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json; charset=UTF-8</value>
+                        <value>application/x-www-form-urlencoded; charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="objectMapper" ref="objectMapper" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 </beans>
