@@ -30,7 +30,7 @@ import javax.persistence.MappedSuperclass;
 public class AbstractLongEntity extends PrePersistEntity<Long> {
     private static final long serialVersionUID = 7915950201388941724L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
